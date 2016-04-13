@@ -40,21 +40,22 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         return cell ?? UITableViewCell()
     }
     
+    // Reload just the cell your tapped is much better.
     func settingSwitchValueChanged(cell: SettingTableViewCell, selected: Bool) {
-        guard let setting = cell.setting else { return }
-        
+        guard let setting = cell.setting,
+            cellIndexPath = tableView.indexPathForCell(cell) else {return}
+        tableView.beginUpdates()
         SettingsController.sharedInstance.updateSettingSelection(setting, selected: selected)
-        tableView.reloadData()
+        tableView.reloadRowsAtIndexPaths([cellIndexPath], withRowAnimation: .Automatic)
+        tableView.endUpdates()
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    // RELOADING THE WHOLE TABLEVIEW LOOSES ANIMATION ON SWITCH
+//    func settingSwitchValueChanged(cell: SettingTableViewCell, selected: Bool) {
+//        guard let setting = cell.setting else { return }
+//        
+//        SettingsController.sharedInstance.updateSettingSelection(setting, selected: selected)
+//        tableView.reloadData()
+//    }
+    
 }
